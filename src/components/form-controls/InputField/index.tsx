@@ -6,12 +6,12 @@ type P = {
     name: string;
     form: any;
     label: string;
-    disabled: boolean;
+    disabled?: boolean;
 };
 
 const InputField: React.FC<P> = (props) => {
     const { name, form, label, disabled } = props;
-    const { errors } = form;
+    const { errors } = form.formState;
     const hasError = !!errors[name];
 
     return (
@@ -20,11 +20,13 @@ const InputField: React.FC<P> = (props) => {
             control={form.control}
             render={() => (
                 <TextField
+                    variant="outlined"
                     fullWidth
                     label={label}
                     disabled={disabled}
-                    error={hasError}
+                    error={!!hasError}
                     helperText={errors[name]?.message}
+                    margin="normal"
                 />
             )}
         />
