@@ -1,6 +1,6 @@
-import { TextField } from "@material-ui/core";
-import React from "react";
-import { Controller } from "react-hook-form";
+import { TextField } from '@material-ui/core';
+import React from 'react';
+import { Controller } from 'react-hook-form';
 
 type P = {
     name: string;
@@ -18,15 +18,16 @@ const InputField: React.FC<P> = (props) => {
         <Controller
             name={name}
             control={form.control}
-            render={() => (
+            render={({ field }) => (
                 <TextField
-                    variant="outlined"
+                    {...field}
+                    variant='outlined'
                     fullWidth
                     label={label}
                     disabled={disabled}
-                    error={!!hasError}
+                    error={hasError}
                     helperText={errors[name]?.message}
-                    margin="normal"
+                    margin='normal'
                 />
             )}
         />

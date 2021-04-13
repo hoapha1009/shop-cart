@@ -1,14 +1,14 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { LockOpenOutlined } from "@material-ui/icons";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import React from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import InputField from "../../../components/form-controls/InputField";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { LockOpenOutlined } from '@material-ui/icons';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import InputField from '../../../components/form-controls/InputField';
+import PasswordField from '../../../components/form-controls/PasswordField';
 
 type Inputs = {
     fullName: string;
@@ -23,18 +23,18 @@ type P = {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: "relative",
+        position: 'relative',
         padding: theme.spacing(2),
     },
 
     avatar: {
-        margin: "0 auto",
+        margin: '0 auto',
         backgroundColor: theme.palette.secondary.main,
     },
 
     title: {
         margin: theme.spacing(2, 0, 2),
-        textAlign: "center",
+        textAlign: 'center',
     },
 
     submit: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     progress: {
-        position: "absolute",
+        position: 'absolute',
         top: theme.spacing(1),
         left: 0,
         right: 0,
@@ -52,18 +52,40 @@ const useStyles = makeStyles((theme) => ({
 export default function RegisterForm(props: P) {
     const { onSubmit } = props;
     const classes = useStyles();
+    const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const schema = yup.object().shape({
-        fullName: yup.string().required(),
-        email: yup.string().required(),
-        password: yup.string().required(),
-        retypePassword: yup.string().required(),
+        fullName: yup
+            .string()
+            .required('Enter full name!')
+            .test(
+                'should has at least 2 words',
+                'Please enter at least 2 words!',
+                (value) => {
+                    return value!.split(' ').length >= 2;
+                }
+            ),
+        email: yup
+            .string()
+            .required('Enter email!')
+            .email('Please enter a valid email!'),
+        password: yup
+            .string()
+            .required('Please enter password!')
+            .matches(
+                regex,
+                'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character!'
+            ),
+        retypePassword: yup
+            .string()
+            .required('Please confirm your password!')
+            .oneOf([yup.ref('password')], 'Retype password wrong!'),
     });
     const form = useForm<Inputs>({
         defaultValues: {
-            fullName: "",
-            email: "",
-            password: "",
-            retypePassword: "",
+            fullName: '',
+            email: '',
+            password: '',
+            retypePassword: '',
         },
         resolver: yupResolver(schema),
     });
@@ -79,27 +101,27 @@ export default function RegisterForm(props: P) {
             <Avatar className={classes.avatar}>
                 <LockOpenOutlined />
             </Avatar>
-            <Typography className={classes.title} component="h3" variant="h5">
+            <Typography className={classes.title} component='h3' variant='h5'>
                 Create an account
             </Typography>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <InputField name="fullName" label="Full Name:" form={form} />
-                <InputField name="email" label="Email:" form={form} />
-                <InputField name="password" label="Password:" form={form} />
-                <InputField
-                    name="retypePassword"
-                    label="Retype Password:"
+                <InputField name='fullName' label='Full Name:' form={form} />
+                <InputField name='email' label='Email:' form={form} />
+                <PasswordField name='password' label='Password:' form={form} />
+                <PasswordField
+                    name='retypePassword'
+                    label='Retype Password:'
                     form={form}
                 />
 
                 <Button
                     // disabled={isSubmitting}
-                    type="submit"
+                    type='submit'
                     className={classes.submit}
-                    variant="contained"
+                    variant='contained'
                     fullWidth
-                    color="primary"
-                    size="large"
+                    color='primary'
+                    size='large'
                 >
                     Create an account
                 </Button>
