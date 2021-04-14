@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userApi from '../../api/userApi';
+import StorageKeys from '../../constants/storage-keys';
 
 interface UsersState {
     current: any;
@@ -20,7 +21,7 @@ interface userDataLogin {
 }
 
 const initialState: UsersState = {
-    current: {},
+    current: JSON.parse(localStorage.getItem(StorageKeys.USER) || '{}'),
     settings: {},
 };
 
@@ -30,21 +31,21 @@ export const register = createAsyncThunk(
     async (payload: userDataRegister) => {
         const data: any = await userApi.register(payload);
         //save data to local storage
-        localStorage.setItem('access_token', data.jwt);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem(StorageKeys.ACCESS_TOKEN, data.jwt);
+        localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
 
         return data.user;
     }
 );
 
 export const login = createAsyncThunk(
-    'user/register',
+    'user/login',
     // if you type your function argument here
     async (payload: userDataLogin) => {
         const data: any = await userApi.login(payload);
         //save data to local storage
-        localStorage.setItem('access_token', data.jwt);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem(StorageKeys.ACCESS_TOKEN, data.jwt);
+        localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
 
         return data.user;
     }
@@ -53,7 +54,13 @@ export const login = createAsyncThunk(
 const userSlice = createSlice({
     name: 'counter',
     initialState,
-    reducers: {},
+    reducers: {
+        signOut: (state) => {
+            localStorage.removeItem(StorageKeys.USER);
+            localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
+            state.current = {};
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(register.fulfilled, (state, action) => {
             state.current = action.payload;
@@ -64,5 +71,6 @@ const userSlice = createSlice({
     },
 });
 
-const { reducer } = userSlice;
+const { actions, reducer } = userSlice;
+export const { signOut } = actions;
 export default reducer;

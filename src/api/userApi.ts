@@ -1,15 +1,7 @@
+import { AxiosRequestConfig } from 'axios';
 import axiosClient from './axiosClient';
 
-interface ServerData {
-    jwt: string;
-    user: any;
-}
-
-interface ServerResponse {
-    data: ServerData;
-}
-
-interface userDataRegister {
+export interface userDataRegister {
     fullName?: string;
     username?: string;
     email?: string;
@@ -17,19 +9,30 @@ interface userDataRegister {
     retypePassword?: string;
 }
 
-interface userDataLogin {
+export interface userDataLogin {
     email?: string;
     password?: string;
+}
+
+export interface registerAxiosResponse {
+    url: string;
+    config?: AxiosRequestConfig;
+    data: userDataRegister;
+}
+export interface loginAxiosResponse {
+    url: string;
+    config?: AxiosRequestConfig;
+    data: userDataLogin;
 }
 
 const userApi = {
     register(data: userDataRegister) {
         const url = '/auth/local/register';
-        return axiosClient.post<ServerResponse>(url, data);
+        return axiosClient.post<registerAxiosResponse>(url, data);
     },
     login(data: userDataLogin) {
         const url = '/auth/local';
-        return axiosClient.post<ServerResponse>(url, data);
+        return axiosClient.post<loginAxiosResponse>(url, data);
     },
 };
 

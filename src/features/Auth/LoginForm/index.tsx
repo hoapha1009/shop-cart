@@ -11,10 +11,8 @@ import InputField from '../../../components/form-controls/InputField';
 import PasswordField from '../../../components/form-controls/PasswordField';
 
 type Inputs = {
-    fullName: string;
-    email: string;
+    identifier: string;
     password: string;
-    retypePassword: string;
 };
 
 type P = {
@@ -50,22 +48,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function RegisterForm(props: P) {
+export default function LoginForm(props: P) {
     const { onSubmit } = props;
     const classes = useStyles();
     // const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const schema = yup.object().shape({
-        fullName: yup
-            .string()
-            .required('Enter full name!')
-            .test(
-                'should has at least 2 words',
-                'Please enter at least 2 words!',
-                (value) => {
-                    return value!.split(' ').length >= 2;
-                }
-            ),
-        email: yup
+        identifier: yup
             .string()
             .required('Enter email!')
             .email('Please enter a valid email!'),
@@ -74,17 +62,11 @@ export default function RegisterForm(props: P) {
         //     regex,
         //     'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character!'
         // ),
-        retypePassword: yup
-            .string()
-            .required('Please confirm your password!')
-            .oneOf([yup.ref('password')], 'Retype password wrong!'),
     });
     const form = useForm<Inputs>({
         defaultValues: {
-            fullName: '',
-            email: '',
+            identifier: '',
             password: '',
-            retypePassword: '',
         },
         resolver: yupResolver(schema),
     });
@@ -104,17 +86,11 @@ export default function RegisterForm(props: P) {
                 <LockOpenOutlined />
             </Avatar>
             <Typography className={classes.title} component='h3' variant='h5'>
-                Create an account
+                Log in
             </Typography>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <InputField name='fullName' label='Full Name:' form={form} />
-                <InputField name='email' label='Email:' form={form} />
+                <InputField name='identifier' label='Email:' form={form} />
                 <PasswordField name='password' label='Password:' form={form} />
-                <PasswordField
-                    name='retypePassword'
-                    label='Retype Password:'
-                    form={form}
-                />
 
                 <Button
                     disabled={isSubmitting}
@@ -125,7 +101,7 @@ export default function RegisterForm(props: P) {
                     color='primary'
                     size='large'
                 >
-                    Create an account
+                    Log in
                 </Button>
             </form>
         </div>
