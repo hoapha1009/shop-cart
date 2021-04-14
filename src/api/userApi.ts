@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from 'axios';
 import axiosClient from './axiosClient';
 
 export interface userDataRegister {
@@ -14,25 +13,21 @@ export interface userDataLogin {
     password?: string;
 }
 
-export interface registerAxiosResponse {
-    url: string;
-    config?: AxiosRequestConfig;
+export interface registerAxiosRequest {
     data: userDataRegister;
 }
-export interface loginAxiosResponse {
-    url: string;
-    config?: AxiosRequestConfig;
+export interface loginAxiosRequest {
     data: userDataLogin;
 }
 
 const userApi = {
     register(data: userDataRegister) {
         const url = '/auth/local/register';
-        return axiosClient.post<registerAxiosResponse>(url, data);
+        return axiosClient.post<registerAxiosRequest>(url, data);
     },
     login(data: userDataLogin) {
         const url = '/auth/local';
-        return axiosClient.post<loginAxiosResponse>(url, data);
+        return axiosClient.post<loginAxiosRequest>(url, data);
     },
 };
 

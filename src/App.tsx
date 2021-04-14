@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router';
 import './App.css';
 import Header from './components/Header';
 import NotFound from './components/NotFound';
-import CounterFeature from './features/Counter';
+import ProductFeature from './features/Product';
 import './reset.css';
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
             <Header />
 
             <Switch>
-                <Route component={CounterFeature} path='/' exact />
+                <Route component={ProductFeature} path='/' exact />
 
                 <Route component={NotFound} />
             </Switch>
