@@ -6,12 +6,17 @@ interface UsersState {
     settings: any;
 }
 
-interface userData {
+interface userDataRegister {
     fullName?: string;
     username?: string;
     email?: string;
     password?: string;
     retypePassword?: string;
+}
+
+interface userDataLogin {
+    email?: string;
+    password?: string;
 }
 
 const initialState: UsersState = {
@@ -22,8 +27,21 @@ const initialState: UsersState = {
 export const register = createAsyncThunk(
     'user/register',
     // if you type your function argument here
-    async (payload: userData) => {
+    async (payload: userDataRegister) => {
         const data: any = await userApi.register(payload);
+        //save data to local storage
+        localStorage.setItem('access_token', data.jwt);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        return data.user;
+    }
+);
+
+export const login = createAsyncThunk(
+    'user/register',
+    // if you type your function argument here
+    async (payload: userDataLogin) => {
+        const data: any = await userApi.login(payload);
         //save data to local storage
         localStorage.setItem('access_token', data.jwt);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -38,6 +56,9 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(register.fulfilled, (state, action) => {
+            state.current = action.payload;
+        });
+        builder.addCase(login.fulfilled, (state, action) => {
             state.current = action.payload;
         });
     },

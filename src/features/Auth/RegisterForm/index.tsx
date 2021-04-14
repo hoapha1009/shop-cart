@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from '@material-ui/core';
+import { Button, LinearProgress } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -24,7 +24,7 @@ type P = {
 const useStyles = makeStyles((theme) => ({
     root: {
         position: 'relative',
-        padding: theme.spacing(2),
+        padding: theme.spacing(3),
     },
 
     avatar: {
@@ -88,14 +88,17 @@ export default function RegisterForm(props: P) {
         resolver: yupResolver(schema),
     });
 
-    const handleSubmit = (values: Inputs) => {
+    const handleSubmit = async (values: Inputs) => {
         if (!onSubmit) return;
 
-        onSubmit(values);
+        await onSubmit(values);
     };
+
+    const { isSubmitting } = form.formState;
 
     return (
         <div className={classes.root}>
+            {isSubmitting && <LinearProgress className={classes.progress} />}
             <Avatar className={classes.avatar}>
                 <LockOpenOutlined />
             </Avatar>
@@ -113,7 +116,7 @@ export default function RegisterForm(props: P) {
                 />
 
                 <Button
-                    // disabled={isSubmitting}
+                    disabled={isSubmitting}
                     type='submit'
                     className={classes.submit}
                     variant='contained'

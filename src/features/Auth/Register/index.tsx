@@ -1,4 +1,5 @@
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useAppDispatch } from '../../../app/hooks';
 import RegisterForm from '../RegisterForm';
@@ -12,18 +13,30 @@ type Inputs = {
     username?: string;
 };
 
-const Register = () => {
+type P = {
+    closeDialog: () => void;
+};
+
+const Register: React.FC<P> = ({ closeDialog }) => {
     const dispatch = useAppDispatch();
+    const { enqueueSnackbar } = useSnackbar();
 
     const onSubmit = async (values: Inputs) => {
         try {
             values.username = values.email;
             const action = register(values);
             const resultAction = await dispatch(action);
-            const user = unwrapResult(resultAction);
-            console.log('New user', user);
+            unwrapResult(resultAction);
+
+            // close Modal
+            if (closeDialog) {
+                closeDialog();
+            }
+
+            // show Success noti
+            enqueueSnackbar('Register successfully!!!', { variant: 'success' });
         } catch (error) {
-            console.log('Failed to register', error);
+            enqueueSnackbar(error.message, { variant: 'error' });
         }
     };
     return (

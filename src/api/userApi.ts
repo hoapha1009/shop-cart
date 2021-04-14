@@ -9,7 +9,7 @@ interface ServerResponse {
     data: ServerData;
 }
 
-interface userData {
+interface userDataRegister {
     fullName?: string;
     username?: string;
     email?: string;
@@ -17,9 +17,18 @@ interface userData {
     retypePassword?: string;
 }
 
+interface userDataLogin {
+    email?: string;
+    password?: string;
+}
+
 const userApi = {
-    register(data: userData) {
+    register(data: userDataRegister) {
         const url = '/auth/local/register';
+        return axiosClient.post<ServerResponse>(url, data);
+    },
+    login(data: userDataLogin) {
+        const url = '/auth/local';
         return axiosClient.post<ServerResponse>(url, data);
     },
 };

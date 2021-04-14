@@ -1,20 +1,20 @@
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import StorefrontIcon from "@material-ui/icons/Storefront";
-import React from "react";
-import { Link } from "react-router-dom";
-import Register from "../../features/Auth/Register";
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import { makeStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Register from '../../features/Auth/Register';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        position: "relative",
+        position: 'relative',
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -23,15 +23,16 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     logo: {
-        marginRight: "20px",
+        marginRight: '20px',
     },
     closeBtn: {
         zIndex: 1,
-        position: "absolute",
-        top: theme.spacing(3),
+        position: 'absolute',
+        top: theme.spacing(2),
         right: theme.spacing(3),
-        fontSize: "30px",
-        cursor: "pointer",
+        fontSize: '25px',
+        cursor: 'pointer',
+        opacity: '0.5',
     },
 }));
 
@@ -49,14 +50,14 @@ const Header = () => {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position='static'>
                 <Toolbar>
-                    <StorefrontIcon fontSize="large" className={classes.logo} />
+                    <StorefrontIcon fontSize='large' className={classes.logo} />
 
-                    <Typography variant="h6" className={classes.title}>
-                        <Link to="/">HaFa</Link>
+                    <Typography variant='h6' className={classes.title}>
+                        <Link to='/'>HaFa</Link>
                     </Typography>
-                    <Button color="inherit" onClick={handleClickOpen}>
+                    <Button color='inherit' onClick={handleClickOpen}>
                         Register
                     </Button>
                 </Toolbar>
@@ -67,10 +68,10 @@ const Header = () => {
                 disableBackdropClick
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="form-dialog-title"
+                aria-labelledby='form-dialog-title'
             >
                 <DialogContent>
-                    <Register />
+                    <Register closeDialog={handleClose} />
                 </DialogContent>
                 <CloseIcon onClick={handleClose} className={classes.closeBtn} />
             </Dialog>
