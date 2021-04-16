@@ -15,10 +15,17 @@ const Product: React.FC<P> = ({ product }: P) => {
 
     return (
         <Box padding={1}>
-            <Box padding={1}>
-                <img src={thumbnailUrl} alt={product.name} width='100%' />
+            <Box padding={1} height='215px' width='215px'>
+                <img
+                    src={thumbnailUrl}
+                    alt={product.name}
+                    width='100%'
+                    height='200px'
+                />
             </Box>
-            <Typography variant='body2'>{product.name}</Typography>
+            <Box height='38px'>
+                <Typography variant='body2'>{product.name}</Typography>
+            </Box>
             <Typography variant='body2'>
                 <Box component='span' fontSize='16px' fontWeight='bold' mr={1}>
                     {new Intl.NumberFormat('vn-VN', {
@@ -30,7 +37,6 @@ const Product: React.FC<P> = ({ product }: P) => {
                     ? ` -${product.promotionPercent}%`
                     : ``}
             </Typography>
-            <Skeleton width='60%' />
         </Box>
     );
 };
