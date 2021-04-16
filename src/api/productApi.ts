@@ -1,6 +1,17 @@
 import axiosClient from './axiosClient';
 
+export interface TCategory {
+    created_at: Date;
+    created_by?: string;
+    id: number;
+    name: string;
+    searchTerm: string;
+    updated_at: Date;
+    updated_by?: string;
+}
+
 export interface IProduct {
+    category: TCategory;
     id: number;
     productId?: number;
     title?: number;
@@ -13,9 +24,10 @@ export interface IProduct {
     isFreeShip: Boolean;
     isPromotion: Boolean;
     originalPrice: number;
-    thumbnail?: string;
+    thumbnail: any;
     update_at: Date;
     update_by?: string;
+    salePrice: number;
 }
 
 export interface IPagination {
@@ -58,7 +70,6 @@ const productApi = {
                 params: newParams,
             }
         );
-        console.log('count', count);
 
         // Build response and return
         return {

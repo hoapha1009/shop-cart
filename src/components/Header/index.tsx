@@ -88,7 +88,12 @@ const Header = () => {
         <div className={classes.root}>
             <AppBar position='static'>
                 <Toolbar>
-                    <StorefrontIcon fontSize='large' className={classes.logo} />
+                    <Link to='/' className={classes.name}>
+                        <StorefrontIcon
+                            fontSize='large'
+                            className={classes.logo}
+                        />
+                    </Link>
 
                     <Typography variant='h6' className={classes.title}>
                         <Link to='/' className={classes.name}>
