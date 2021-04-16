@@ -1,5 +1,4 @@
 import { Box, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 import { IProduct } from '../../../api/productApi';
 import { STATIC_HOST, THUMBNAIL_URL } from '../../../constants';
