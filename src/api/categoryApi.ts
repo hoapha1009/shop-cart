@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import axiosClient from './axiosClient';
 
 const categoryApi = {
-    getAll(params: string): Promise<AxiosResponse<any>> {
+    getAll(params?: string): Promise<AxiosResponse<any>> {
         const url = '/categories';
         return axiosClient.get(url, { params });
     },
