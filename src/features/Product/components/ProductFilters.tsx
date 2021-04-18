@@ -1,6 +1,7 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import FilterByCategory from './Filters/FilterByCategory';
+import FilterByPrice, { IFilterByPrice } from './Filters/FilterByPrice';
 
 export type P = {
     onChange?: (newCategoryId: number) => void;
@@ -21,12 +22,16 @@ const ProductFilters: React.FC<P> = ({ onChange, filters }: P) => {
         onChange(newFilters);
     };
 
-    const handlePriceChange = (newCategoryId: number) => {
+    const handlePriceChange = (filterByPriceValues: IFilterByPrice) => {
+        console.log('filterByPriceValues', filterByPriceValues);
         if (!onChange) return;
+
+        const { salePrice_gte, salePrice_lte } = filterByPriceValues;
 
         const newFilters = {
             ...filters,
-            'category.id': newCategoryId,
+            salePrice_gte,
+            salePrice_lte,
         };
 
         onChange(newFilters);
@@ -35,7 +40,7 @@ const ProductFilters: React.FC<P> = ({ onChange, filters }: P) => {
     return (
         <Box>
             <FilterByCategory onChange={handleCategoryChange} />
-            <FilterByCategory onChange={handlePriceChange} />
+            <FilterByPrice onChange={handlePriceChange} />
         </Box>
     );
 };
