@@ -81,7 +81,7 @@ const ListPage = () => {
     return (
         <Box>
             <Container>
-                <Grid container>
+                <Grid container spacing={1}>
                     <Grid item className={classes.left}>
                         <Paper elevation={0}>
                             <ProductFilters
