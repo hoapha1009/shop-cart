@@ -2,6 +2,7 @@ import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React from 'react';
 import productApi, { IProduct } from '../../../api/productApi';
+import FilterViewer from '../components/FilterViewer';
 import ProductFilters from '../components/ProductFilters';
 import ProductList from '../components/ProductList';
 import ProductSkeleton from '../components/ProductSkeleton';
@@ -78,6 +79,9 @@ const ListPage = () => {
         }));
     };
 
+    const setNewFilters = (newFilters: any) => {
+        setFilters(newFilters);
+    };
     return (
         <Box>
             <Container>
@@ -95,6 +99,11 @@ const ListPage = () => {
                             <ProductSort
                                 activeSort={filters._sort}
                                 onChange={handleSortChange}
+                            />
+
+                            <FilterViewer
+                                filters={filters}
+                                onChange={setNewFilters}
                             />
 
                             {loading ? (
