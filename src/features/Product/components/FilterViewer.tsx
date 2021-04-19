@@ -46,7 +46,7 @@ const FILTER_LIST = [
         id: 2,
         getLabel: (filters: any) => 'Có khuyến mãi',
         isActive: () => true,
-        isVisible: (filters: any) => [filters.isPromotion] as const,
+        isVisible: (filters: any): Boolean => Boolean(filters.isPromotion),
         isRemovable: true,
         onRemove: (filters: any) => {
             const newFilters: any = { ...filters };
@@ -61,11 +61,13 @@ const FILTER_LIST = [
         getLabel: (filters: any) =>
             `Giá từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
         isActive: () => true,
-        isVisible: (filters: any) =>
-            Object.keys(filters).includes('salePrice_gte') &&
-            Object.keys(filters).includes('salePrice_lte') &&
-            Number(filters.salePrice_gte) > 0 &&
-            Number(filters.salePrice_lte) > 0,
+        isVisible: (filters: any): Boolean =>
+            Boolean(
+                Object.keys(filters).includes('salePrice_gte') &&
+                    Object.keys(filters).includes('salePrice_lte') &&
+                    Number(filters.salePrice_gte) > 0 &&
+                    Number(filters.salePrice_lte) > 0
+            ),
         isRemovable: true,
         onRemove: (filters: any) => {
             const newFilters: any = { ...filters };
