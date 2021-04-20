@@ -35,38 +35,29 @@ const ListPage = () => {
     const classes = useStyles();
     const [loading, setLoading] = React.useState(true);
     const [productList, setProductList] = React.useState<IProductList>();
-    const [categoryList, setCategorylist] = React.useState();
+    const [categoryPicked, setCategoryPicked] = React.useState();
     const [pagination, setPagination] = React.useState({
         limit: 12,
         page: 1,
         total: 12,
     });
-    const queryParams: any = queryString.parse(location.search);
-    console.log(
-        'queryParams',
-        typeof Number.parseInt(queryParams['category.id'])
-    );
-
-    const [filters, setFilters] = React.useState(() => ({
-        ...queryParams,
-        _page: Number.parseInt(queryParams._page) || 1,
-        _limit: Number.parseInt(queryParams._limit) || 12,
-        _sort: queryParams._sort || 'salePrice:ASC',
-    }));
-    console.log('filters', filters);
-
-    React.useEffect(() => {
-        history.push({
-            pathname: history.location.pathname,
-            search: queryString.stringify(filters),
-        });
-    }, [history, filters]);
+    const queryParams: any = React.useMemo(() => {
+        const params: any = queryString.parse(location.search);
+        return {
+            ...params,
+            _page: Number.parseInt(params._page) || 1,
+            _limit: Number.parseInt(params._limit) || 12,
+            _sort: params._sort || 'salePrice:ASC',
+            isPromotion: params.isPromotion === 'true',
+            isFreeShip: params.isFreeShip === 'true',
+        };
+    }, [location.search]);
 
     React.useEffect(() => {
         (async () => {
             try {
                 const { data, pagination }: any = await productApi.getAll(
-                    filters
+                    queryParams
                 );
 
                 setProductList(data);
@@ -77,58 +68,73 @@ const ListPage = () => {
 
             setLoading(false);
         })();
-    }, [filters]);
+    }, [queryParams]);
 
     React.useEffect(() => {
         (async () => {
             try {
-                let list: any;
-                if (queryParams['category.id']) {
-                    list = await categoryApi.get(
+                if (!queryParams['category.id']) {
+                    return;
+                } else {
+                    const list: any = await categoryApi.get(
                         Number.parseInt(queryParams['category.id'])
                     );
-                    console.log('list', list);
-                    setCategorylist(list);
-                } else {
-                    list = await categoryApi.getAll();
-                    console.log('list', list);
-                    setCategorylist(
-                        list.map((item: any) => ({
-                            id: item.id,
-                            name: item.name,
-                        }))
-                    );
+
+                    setCategoryPicked(list);
                 }
             } catch (error) {
                 console.log('Failed to fetch category list!', error);
             }
         })();
-    }, [history.location.search]);
+    }, [queryParams]);
 
     const handleChangePage = (e: React.ChangeEvent<unknown>, page: number) => {
-        setFilters((prevFilters: any) => ({
-            ...prevFilters,
+        const filters = {
+            ...queryParams,
             _page: page,
-        }));
+        };
+
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        });
     };
 
     const handleSortChange = (newSortValue: string) => {
-        setFilters((prevFilters: any) => ({
-            ...prevFilters,
+        const filters = {
+            ...queryParams,
             _sort: newSortValue,
-        }));
+        };
+
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        });
     };
 
     const handleFiltersChange = (newFilters: any) => {
-        setFilters((prevFilters: any) => ({
-            ...prevFilters,
+        const filters = {
+            ...queryParams,
             ...newFilters,
-        }));
+        };
+
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        });
     };
 
     const setNewFilters = (newFilters: any) => {
-        setFilters(newFilters);
+        const filters = {
+            ...newFilters,
+        };
+
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        });
     };
+
     return (
         <Box>
             <Container>
@@ -136,7 +142,7 @@ const ListPage = () => {
                     <Grid item className={classes.left}>
                         <Paper elevation={0}>
                             <ProductFilters
-                                filters={filters}
+                                filters={queryParams}
                                 onChange={handleFiltersChange}
                             />
                         </Paper>
@@ -144,14 +150,14 @@ const ListPage = () => {
                     <Grid item className={classes.right}>
                         <Paper elevation={0}>
                             <ProductSort
-                                activeSort={filters._sort}
+                                activeSort={queryParams._sort}
                                 onChange={handleSortChange}
                             />
 
                             <FilterViewer
-                                filters={filters}
+                                filters={queryParams}
                                 onChange={setNewFilters}
-                                categoryList={categoryList}
+                                categoryPicked={categoryPicked}
                             />
 
                             {loading ? (

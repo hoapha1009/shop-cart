@@ -6,12 +6,12 @@ export interface IFilterViewer {}
 interface P {
     filters: any;
     onChange?: (filters: any) => void;
-    categoryList: any;
+    categoryPicked: any;
 }
 
 interface IFilterItem {
     id: number;
-    getLabel(filters: any, categoryList: any): any;
+    getLabel(filters: any, categoryPicked: any): any;
     isActive(filters: any): Boolean;
     isVisible(filters: any): Boolean;
     isRemovable: Boolean;
@@ -88,20 +88,12 @@ const FILTER_LIST: IFilterItem[] = [
     },
     {
         id: 4,
-        getLabel: (filters, categoryList) => {
+        getLabel: (filters, categoryPicked) => {
             const newFilters = { ...filters };
-            let productName = null;
-            if (newFilters['category.id'] && Array.isArray(categoryList)) {
-                const category = categoryList.find(
-                    (x: any) => x.id === newFilters['category.id']
-                );
-
-                console.log('category', category);
-                productName = category.name;
+            if (!categoryPicked || !newFilters['category.id']) {
+                return '';
             }
-            productName = categoryList.name;
-
-            return productName;
+            return categoryPicked.name;
         },
         isActive: () => true,
         isVisible: (filters) => filters['category.id'],
@@ -118,9 +110,8 @@ const FILTER_LIST: IFilterItem[] = [
 const FilterViewer: React.FC<P> = ({
     filters = {},
     onChange,
-    categoryList,
+    categoryPicked,
 }) => {
-    console.log('categoryList', categoryList);
     const classes = useStyles();
 
     const handleFiltersChange = (filters: any, x: any) => {
@@ -155,7 +146,7 @@ const FilterViewer: React.FC<P> = ({
                     return (
                         <li key={x.id}>
                             <Chip
-                                label={x.getLabel(filters, categoryList)}
+                                label={x.getLabel(filters, categoryPicked)}
                                 color={
                                     x.isActive(filters) ? 'primary' : 'default'
                                 }
@@ -169,7 +160,7 @@ const FilterViewer: React.FC<P> = ({
                     return (
                         <li key={x.id}>
                             <Chip
-                                label={x.getLabel(filters, categoryList)}
+                                label={x.getLabel(filters, categoryPicked)}
                                 color={
                                     x.isActive(filters) ? 'primary' : 'default'
                                 }
