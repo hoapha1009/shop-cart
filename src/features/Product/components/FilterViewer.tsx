@@ -91,12 +91,16 @@ const FILTER_LIST: IFilterItem[] = [
         getLabel: (filters, categoryList) => {
             const newFilters = { ...filters };
             let productName = null;
-            if (newFilters['category.id']) {
+            if (newFilters['category.id'] && Array.isArray(categoryList)) {
                 const category = categoryList.find(
                     (x: any) => x.id === newFilters['category.id']
                 );
+
+                console.log('category', category);
                 productName = category.name;
             }
+            productName = categoryList.name;
+
             return productName;
         },
         isActive: () => true,
@@ -116,6 +120,7 @@ const FilterViewer: React.FC<P> = ({
     onChange,
     categoryList,
 }) => {
+    console.log('categoryList', categoryList);
     const classes = useStyles();
 
     const handleFiltersChange = (filters: any, x: any) => {

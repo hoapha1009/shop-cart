@@ -1,6 +1,7 @@
 import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React from 'react';
+import { useHistory, useLocation } from 'react-router';
 import categoryApi from '../../../api/categoryApi';
 import productApi, { IProduct } from '../../../api/productApi';
 import FilterViewer from '../components/FilterViewer';
@@ -8,6 +9,7 @@ import ProductFilters from '../components/ProductFilters';
 import ProductList from '../components/ProductList';
 import ProductSkeleton from '../components/ProductSkeleton';
 import ProductSort from '../components/ProductSort';
+import queryString from 'query-string';
 
 export type IProductList = IProduct[];
 
@@ -28,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListPage = () => {
+    const location = useLocation();
+    const history = useHistory();
     const classes = useStyles();
     const [loading, setLoading] = React.useState(true);
     const [productList, setProductList] = React.useState<IProductList>();
@@ -37,11 +41,26 @@ const ListPage = () => {
         page: 1,
         total: 12,
     });
-    const [filters, setFilters] = React.useState({
-        _page: 1,
-        _limit: 12,
-        _sort: 'salePrice:ASC',
-    });
+    const queryParams: any = queryString.parse(location.search);
+    console.log(
+        'queryParams',
+        typeof Number.parseInt(queryParams['category.id'])
+    );
+
+    const [filters, setFilters] = React.useState(() => ({
+        ...queryParams,
+        _page: Number.parseInt(queryParams._page) || 1,
+        _limit: Number.parseInt(queryParams._limit) || 12,
+        _sort: queryParams._sort || 'salePrice:ASC',
+    }));
+    console.log('filters', filters);
+
+    React.useEffect(() => {
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify(filters),
+        });
+    }, [history, filters]);
 
     React.useEffect(() => {
         (async () => {
@@ -63,36 +82,45 @@ const ListPage = () => {
     React.useEffect(() => {
         (async () => {
             try {
-                const list: any = await categoryApi.getAll();
-
-                setCategorylist(
-                    list.map((item: any) => ({
-                        id: item.id,
-                        name: item.name,
-                    }))
-                );
+                let list: any;
+                if (queryParams['category.id']) {
+                    list = await categoryApi.get(
+                        Number.parseInt(queryParams['category.id'])
+                    );
+                    console.log('list', list);
+                    setCategorylist(list);
+                } else {
+                    list = await categoryApi.getAll();
+                    console.log('list', list);
+                    setCategorylist(
+                        list.map((item: any) => ({
+                            id: item.id,
+                            name: item.name,
+                        }))
+                    );
+                }
             } catch (error) {
                 console.log('Failed to fetch category list!', error);
             }
         })();
-    }, []);
+    }, [history.location.search]);
 
     const handleChangePage = (e: React.ChangeEvent<unknown>, page: number) => {
-        setFilters((prevFilters) => ({
+        setFilters((prevFilters: any) => ({
             ...prevFilters,
             _page: page,
         }));
     };
 
     const handleSortChange = (newSortValue: string) => {
-        setFilters((prevFilters) => ({
+        setFilters((prevFilters: any) => ({
             ...prevFilters,
             _sort: newSortValue,
         }));
     };
 
     const handleFiltersChange = (newFilters: any) => {
-        setFilters((prevFilters) => ({
+        setFilters((prevFilters: any) => ({
             ...prevFilters,
             ...newFilters,
         }));
@@ -101,7 +129,6 @@ const ListPage = () => {
     const setNewFilters = (newFilters: any) => {
         setFilters(newFilters);
     };
-
     return (
         <Box>
             <Container>

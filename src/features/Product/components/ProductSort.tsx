@@ -2,7 +2,7 @@ import { Box, Tab, Tabs } from '@material-ui/core';
 import React from 'react';
 
 export interface IProductSort {
-    activeSort: string;
+    activeSort: string | string[];
     onChange: (value: string) => void;
 }
 
