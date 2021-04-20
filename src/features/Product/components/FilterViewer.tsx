@@ -1,7 +1,5 @@
 import { Box, Chip, makeStyles } from '@material-ui/core';
 import React from 'react';
-import { IProduct } from '../../../api/productApi';
-import { IProductList } from '../pages/ListPage';
 
 export interface IFilterViewer {}
 
@@ -27,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
         flexFlow: 'row nowrap',
         alignItems: 'center',
         paddingLeft: theme.spacing(2),
-        margin: theme.spacing(2, 0),
 
         '& > li': {
             padding: theme.spacing(1),

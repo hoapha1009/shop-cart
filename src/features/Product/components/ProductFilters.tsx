@@ -1,8 +1,8 @@
 import { Box } from '@material-ui/core';
 import React from 'react';
 import FilterByCategory from './Filters/FilterByCategory';
-import FilterByPrice, { IFilterByPrice } from './Filters/FilterByPrice';
-import FilterByService, { IFilterByService } from './Filters/FilterByService';
+import FilterByPrice from './Filters/FilterByPrice';
+import FilterByService from './Filters/FilterByService';
 
 export type P = {
     onChange?: (newCategoryId: number) => void;
@@ -21,32 +21,16 @@ const ProductFilters: React.FC<P> = ({ onChange, filters }: P) => {
         onChange(newFilters);
     };
 
-    const handlePriceChange = (filterByPriceValues: IFilterByPrice) => {
+    const handlePriceChange = (filterByPriceValues: any) => {
         if (!onChange) return;
 
-        const { salePrice_gte, salePrice_lte } = filterByPriceValues;
-
-        const newFilters = {
-            ...filters,
-            salePrice_gte,
-            salePrice_lte,
-        };
-
-        onChange(newFilters);
+        onChange(filterByPriceValues);
     };
 
-    const handleServiceChange = (filterByServiceValues: IFilterByService) => {
+    const handleServiceChange = (filterByServiceValues: any) => {
         if (!onChange) return;
 
-        const { isPromotion, isFreeShip } = filterByServiceValues;
-
-        const newFilters = {
-            ...filters,
-            isPromotion,
-            isFreeShip,
-        };
-
-        onChange(newFilters);
+        onChange(filterByServiceValues);
     };
 
     return (
