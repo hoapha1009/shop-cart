@@ -1,11 +1,24 @@
 import { Box, Chip, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { IProduct } from '../../../api/productApi';
+import { IProductList } from '../pages/ListPage';
 
 export interface IFilterViewer {}
 
 interface P {
     filters: any;
     onChange?: (filters: any) => void;
+    categoryList: any;
+}
+
+interface IFilterItem {
+    id: number;
+    getLabel(filters: any, categoryList: any): any;
+    isActive(filters: any): Boolean;
+    isVisible(filters: any): Boolean;
+    isRemovable: Boolean;
+    onRemove(filters: any): any;
+    onToggle(filters: any): any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -22,15 +35,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const FILTER_LIST = [
+const FILTER_LIST: IFilterItem[] = [
     {
         id: 1,
-        getLabel: (filters: any) => 'Giao hàng miễn phí',
-        isActive: (filters: any) => filters.isFreeShip,
-        isVisible: true,
+        getLabel: (filters) => 'Giao hàng miễn phí',
+        isActive: (filters) => filters.isFreeShip,
+        isVisible: () => true,
         isRemovable: false,
-        onRemove: (filters: any) => {},
-        onToggle: (filters: any) => {
+        onRemove: (filters) => {},
+        onToggle: (filters) => {
             const newFilters: any = { ...filters };
 
             if (newFilters.isFreeShip) {
@@ -44,11 +57,11 @@ const FILTER_LIST = [
     },
     {
         id: 2,
-        getLabel: (filters: any) => 'Có khuyến mãi',
+        getLabel: (filters) => 'Có khuyến mãi',
         isActive: () => true,
-        isVisible: (filters: any): Boolean => Boolean(filters.isPromotion),
+        isVisible: (filters) => filters.isPromotion,
         isRemovable: true,
-        onRemove: (filters: any) => {
+        onRemove: (filters) => {
             const newFilters: any = { ...filters };
 
             delete newFilters.isPromotion;
@@ -58,18 +71,16 @@ const FILTER_LIST = [
     },
     {
         id: 3,
-        getLabel: (filters: any) =>
+        getLabel: (filters) =>
             `Giá từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
         isActive: () => true,
-        isVisible: (filters: any): Boolean =>
-            Boolean(
-                Object.keys(filters).includes('salePrice_gte') &&
-                    Object.keys(filters).includes('salePrice_lte') &&
-                    Number(filters.salePrice_gte) > 0 &&
-                    Number(filters.salePrice_lte) > 0
-            ),
+        isVisible: (filters) =>
+            Object.keys(filters).includes('salePrice_gte') &&
+            Object.keys(filters).includes('salePrice_lte') &&
+            Number(filters.salePrice_gte) >= 0 &&
+            Number(filters.salePrice_lte) > 0,
         isRemovable: true,
-        onRemove: (filters: any) => {
+        onRemove: (filters) => {
             const newFilters: any = { ...filters };
 
             delete newFilters.salePrice_gte;
@@ -78,19 +89,37 @@ const FILTER_LIST = [
         },
         onToggle: () => {},
     },
-    // {
-    //     id: 1,
-    //     getLabel: (filters) => 'Danh mục',
-    //     isActive: (filters) => true,
-    //     isVisible: (filters) => true,
-    //     isRemovable: true,
-    //     onRemove: (filters) => {},
-    //     onToggle: (filters) => {},
-    // },
+    {
+        id: 4,
+        getLabel: (filters, categoryList) => {
+            const newFilters = { ...filters };
+            let productName = null;
+            if (newFilters['category.id']) {
+                const category = categoryList.find(
+                    (x: any) => x.id === newFilters['category.id']
+                );
+                productName = category.name;
+            }
+            return productName;
+        },
+        isActive: () => true,
+        isVisible: (filters) => filters['category.id'],
+        isRemovable: true,
+        onRemove: (filters) => {
+            const newFilters = { ...filters };
+
+            delete newFilters['category.id'];
+            return newFilters;
+        },
+        onToggle: () => {},
+    },
 ];
-const FilterViewer: React.FC<P> = ({ filters = {}, onChange }) => {
+const FilterViewer: React.FC<P> = ({
+    filters = {},
+    onChange,
+    categoryList,
+}) => {
     const classes = useStyles();
-    console.log('filters', filters);
 
     const handleFiltersChange = (filters: any, x: any) => {
         if (!onChange) return;
@@ -113,19 +142,42 @@ const FilterViewer: React.FC<P> = ({ filters = {}, onChange }) => {
         return x.isRemovable ? handleFiltersRemove(filters, x) : null;
     };
 
+    const visibleFilters = React.useMemo(() => {
+        return FILTER_LIST.filter((x) => x.isVisible(filters));
+    }, [filters]);
+
     return (
         <Box className={classes.root} component='ul'>
-            {FILTER_LIST.filter((x) => x.isVisible(filters)).map((x) => (
-                <li key={x.id}>
-                    <Chip
-                        label={x.getLabel(filters)}
-                        color={x.isActive(filters) ? 'primary' : 'default'}
-                        clickable={!x.isRemovable}
-                        onClick={() => handleClick(filters, x)}
-                        onDelete={() => handleDelete(filters, x)}
-                    />
-                </li>
-            ))}
+            {visibleFilters.map((x) => {
+                if (x.isRemovable) {
+                    return (
+                        <li key={x.id}>
+                            <Chip
+                                label={x.getLabel(filters, categoryList)}
+                                color={
+                                    x.isActive(filters) ? 'primary' : 'default'
+                                }
+                                clickable={!x.isRemovable}
+                                onClick={() => handleClick(filters, x)}
+                                onDelete={() => handleDelete(filters, x)}
+                            />
+                        </li>
+                    );
+                } else {
+                    return (
+                        <li key={x.id}>
+                            <Chip
+                                label={x.getLabel(filters, categoryList)}
+                                color={
+                                    x.isActive(filters) ? 'primary' : 'default'
+                                }
+                                clickable={!x.isRemovable}
+                                onClick={() => handleClick(filters, x)}
+                            />
+                        </li>
+                    );
+                }
+            })}
         </Box>
     );
 };

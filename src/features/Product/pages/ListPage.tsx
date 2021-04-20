@@ -1,6 +1,7 @@
 import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React from 'react';
+import categoryApi from '../../../api/categoryApi';
 import productApi, { IProduct } from '../../../api/productApi';
 import FilterViewer from '../components/FilterViewer';
 import ProductFilters from '../components/ProductFilters';
@@ -30,6 +31,7 @@ const ListPage = () => {
     const classes = useStyles();
     const [loading, setLoading] = React.useState(true);
     const [productList, setProductList] = React.useState<IProductList>();
+    const [categoryList, setCategorylist] = React.useState();
     const [pagination, setPagination] = React.useState({
         limit: 12,
         page: 1,
@@ -58,6 +60,23 @@ const ListPage = () => {
         })();
     }, [filters]);
 
+    React.useEffect(() => {
+        (async () => {
+            try {
+                const list: any = await categoryApi.getAll();
+
+                setCategorylist(
+                    list.map((item: any) => ({
+                        id: item.id,
+                        name: item.name,
+                    }))
+                );
+            } catch (error) {
+                console.log('Failed to fetch category list!', error);
+            }
+        })();
+    }, []);
+
     const handleChangePage = (e: React.ChangeEvent<unknown>, page: number) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -82,6 +101,7 @@ const ListPage = () => {
     const setNewFilters = (newFilters: any) => {
         setFilters(newFilters);
     };
+
     return (
         <Box>
             <Container>
@@ -104,6 +124,7 @@ const ListPage = () => {
                             <FilterViewer
                                 filters={filters}
                                 onChange={setNewFilters}
+                                categoryList={categoryList}
                             />
 
                             {loading ? (
