@@ -51,17 +51,12 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginForm(props: P) {
     const { onSubmit } = props;
     const classes = useStyles();
-    // const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const schema = yup.object().shape({
         identifier: yup
             .string()
             .required('Enter email!')
             .email('Please enter a valid email!'),
         password: yup.string().required('Please enter password!'),
-        // .matches(
-        //     regex,
-        //     'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character!'
-        // ),
     });
     const form = useForm<Inputs>({
         defaultValues: {
