@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface IState {
+export interface ICartState {
     showMiniCart: Boolean;
     cartItems: any | [];
 }
 
-const initialState: IState = {
+const initialState: ICartState = {
     showMiniCart: false,
     cartItems: [],
 };
@@ -52,5 +52,11 @@ const userSlice = createSlice({
 });
 
 const { actions, reducer } = userSlice;
-export const { showMiniCart, hideMiniCart } = actions;
+export const {
+    showMiniCart,
+    hideMiniCart,
+    addToCart,
+    setQuantity,
+    removeFromCart,
+} = actions;
 export default reducer;
