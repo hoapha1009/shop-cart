@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 const ProductReviews = () => {
     const classes = useStyles();
     const [value, setValue] = React.useState<number | null>(2);
-    const [hover, setHover] = React.useState(-1);
     return (
         <Paper elevation={0} className={classes.root}>
             <Box>
