@@ -6,7 +6,6 @@ import {
     Typography,
 } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
 import React from 'react';

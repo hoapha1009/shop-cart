@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -13,13 +13,8 @@ interface Props {
     onSubmit?: (values: IInputAddToCartForm) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
-    root: {},
-}));
-
 const AddToCartForm = (props: Props) => {
     const { onSubmit } = props;
-    const classes = useStyles();
     const schema = yup.object().shape({
         quantity: yup
             .number()
