@@ -90,10 +90,14 @@ const FILTER_LIST: IFilterItem[] = [
         id: 4,
         getLabel: (filters, categoryPicked) => {
             const newFilters = { ...filters };
-            if (!categoryPicked || !newFilters['category.id']) {
+            if (!categoryPicked) {
                 return '';
             }
-            return categoryPicked.name;
+            if (newFilters['category.id']) {
+                return categoryPicked.name;
+            }
+
+            return '';
         },
         isActive: () => true,
         isVisible: (filters) => filters['category.id'],

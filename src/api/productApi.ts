@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import axiosClient from './axiosClient';
 
 export interface TCategory {
@@ -80,6 +81,26 @@ const productApi = {
                 total: count,
             },
         };
+    },
+
+    get(id: number): Promise<AxiosResponse<any>> {
+        const url = `/products/${id}`;
+        return axiosClient.get(url);
+    },
+
+    add(data: any): Promise<AxiosResponse<any>> {
+        const url = '/products';
+        return axiosClient.post(url, data);
+    },
+
+    update(data: any): Promise<AxiosResponse<any>> {
+        const url = `/products/${data.id}`;
+        return axiosClient.patch(url, data);
+    },
+
+    remove(id: number): Promise<AxiosResponse<any>> {
+        const url = `/products/${id}`;
+        return axiosClient.delete(url);
     },
 };
 

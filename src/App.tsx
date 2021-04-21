@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import './App.css';
 import Header from './components/Header';
 import NotFound from './components/NotFound';
@@ -12,7 +12,8 @@ function App() {
             <Header />
 
             <Switch>
-                <Route component={ProductFeature} path='/' exact />
+                <Redirect from='/' to='/products' exact />
+                <Route component={ProductFeature} path='/products' />
 
                 <Route component={NotFound} />
             </Switch>
