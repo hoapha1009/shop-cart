@@ -1,9 +1,10 @@
 import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
+import ReactLoading from 'react-loading';
 import { useRouteMatch } from 'react-router';
+import ProductInfo from '../components/ProductInfo';
 import ProductThumbnail from '../components/ProductThumbnail';
 import useProductDetail from '../hooks/useProductDetail';
-import ReactLoading from 'react-loading';
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -17,7 +18,9 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1.5),
     },
     loading: {
-        margin: '0 auto',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 }));
 
@@ -48,7 +51,7 @@ const DetailPage = () => {
                             <ProductThumbnail product={product} />
                         </Grid>
                         <Grid item className={classes.right}>
-                            Product
+                            <ProductInfo product={product} />
                         </Grid>
                     </Grid>
                 </Paper>

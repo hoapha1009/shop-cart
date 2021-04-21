@@ -3,6 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { IProduct } from '../../../api/productApi';
 import { STATIC_HOST, THUMBNAIL_URL } from '../../../constants';
+import formatPrice from '../../../utils/common';
 
 interface P {
     product: IProduct;
@@ -44,10 +45,7 @@ const Product: React.FC<P> = ({ product }: P) => {
                         fontWeight='bold'
                         mr={1}
                     >
-                        {new Intl.NumberFormat('vn-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                        }).format(product.salePrice)}
+                        {formatPrice(product.salePrice)}
                     </Box>
                     {product.promotionPercent > 0
                         ? ` -${product.promotionPercent}%`
