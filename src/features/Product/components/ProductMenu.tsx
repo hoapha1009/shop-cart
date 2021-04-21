@@ -7,10 +7,12 @@ interface Props {}
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        paddingTop: theme.spacing(3),
         display: 'flex',
         flexFlow: 'row nowrap',
         justifyContent: 'center',
         alignItems: 'center',
+        borderTop: `1px solid ${theme.palette.grey[300]}`,
 
         '& > li': {
             padding: theme.spacing(2, 4),
@@ -18,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
 
         '& > li > a': {
             color: theme.palette.grey[700],
+            fontWeight: 'bold',
+            transition: 'all 0.25',
         },
 
         '& > li > a.active': {
@@ -34,17 +38,17 @@ const ProductMenu = (props: Props) => {
         <Box component='ul' className={classes.root}>
             <li>
                 <Link component={NavLink} to={url} exact>
-                    Description
+                    Mô tả
                 </Link>
             </li>
             <li>
                 <Link component={NavLink} to={`${url}/additional`}>
-                    Additional
+                    Khuyến mãi thêm
                 </Link>
             </li>
             <li>
                 <Link component={NavLink} to={`${url}/reviews`}>
-                    Reviews
+                    Đánh giá
                 </Link>
             </li>
         </Box>

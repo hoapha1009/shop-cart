@@ -6,7 +6,6 @@ import ListPage from './pages/ListPage';
 
 const ProductFeature = () => {
     const match = useRouteMatch();
-    console.log(`${match.url}/:productId`);
     return (
         <Box pt={3}>
             <Switch>

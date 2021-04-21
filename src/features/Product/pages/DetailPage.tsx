@@ -1,16 +1,22 @@
 import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { useRouteMatch } from 'react-router';
-import AddToCartForm from '../components/AddToCartForm';
+import { Route, Switch, useRouteMatch } from 'react-router';
+import AddToCartForm, {
+    IInputAddToCartForm,
+} from '../components/AddToCartForm';
+import ProductAdditional from '../components/ProductAdditional';
+import ProductDescription from '../components/ProductDescription';
 import ProductInfo from '../components/ProductInfo';
+import ProductMenu from '../components/ProductMenu';
+import ProductReviews from '../components/ProductReviews';
 import ProductThumbnail from '../components/ProductThumbnail';
 import useProductDetail from '../hooks/useProductDetail';
-import { IInputAddToCartForm } from '../components/AddToCartForm';
-import ProductMenu from '../components/ProductMenu';
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
+    root: {
+        paddingBottom: theme.spacing(3),
+    },
     left: {
         width: '400px',
         padding: theme.spacing(1.5),
@@ -21,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1.5),
     },
     loading: {
+        height: '80vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -29,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DetailPage = () => {
     const classes = useStyles();
-    const { params } = useRouteMatch();
+    const { params, url } = useRouteMatch();
     const { product, loading } = useProductDetail(params);
 
     if (loading) {
@@ -37,9 +44,9 @@ const DetailPage = () => {
             <Box className={classes.loading}>
                 <ReactLoading
                     type='spinningBubbles'
-                    color='#000'
-                    height={667}
-                    width={375}
+                    color='#3F51B5'
+                    height={200}
+                    width={200}
                 />
             </Box>
         );
@@ -50,7 +57,7 @@ const DetailPage = () => {
     };
 
     return (
-        <Box className='root'>
+        <Box className={classes.root}>
             <Container>
                 <Paper elevation={0}>
                     <Grid container>
@@ -63,8 +70,21 @@ const DetailPage = () => {
                         </Grid>
                     </Grid>
                 </Paper>
+                <Paper elevation={0}>
+                    <ProductMenu />
+                </Paper>
 
-                <ProductMenu />
+                <Switch>
+                    <Route exact path={url}>
+                        <ProductDescription product={product} />
+                    </Route>
+                    <Route exact path={`${url}/additional`}>
+                        <ProductAdditional product={product} />
+                    </Route>
+                    <Route exact path={`${url}/reviews`}>
+                        <ProductReviews />
+                    </Route>
+                </Switch>
             </Container>
         </Box>
     );
