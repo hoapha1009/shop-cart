@@ -5,8 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './app/store';
+import store, { persistor } from './app/store';
 import { SnackbarProvider } from 'notistack';
+import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,7 +16,9 @@ ReactDOM.render(
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
                 <BrowserRouter>
-                    <App />
+                    <PersistGate persistor={persistor} loading={null}>
+                        <App />
+                    </PersistGate>
                 </BrowserRouter>
             </SnackbarProvider>
         </Provider>

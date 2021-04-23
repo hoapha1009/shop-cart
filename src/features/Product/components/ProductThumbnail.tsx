@@ -4,9 +4,11 @@ import { STATIC_HOST, THUMBNAIL_URL } from '../../../constants';
 
 interface P {
     product: any;
+    width: string | number;
+    height: string | number;
 }
 
-const ProductThumbnail: React.FC<P> = ({ product }) => {
+const ProductThumbnail: React.FC<P> = ({ product, width, height }) => {
     const thumbnailUrl = product.thumbnail
         ? `${STATIC_HOST}${product.thumbnail?.url}`
         : `${THUMBNAIL_URL}`;
@@ -16,8 +18,8 @@ const ProductThumbnail: React.FC<P> = ({ product }) => {
             <img
                 src={thumbnailUrl}
                 alt={product.name}
-                width='100%'
-                height='400px'
+                width={width}
+                height={height}
             />
         </Box>
     );

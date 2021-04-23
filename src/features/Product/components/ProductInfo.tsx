@@ -1,6 +1,6 @@
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import formatPrice from '../../../utils/common';
+import { formatPrice } from '../../../utils';
 
 interface P {
     product: any;

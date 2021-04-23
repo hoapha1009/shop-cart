@@ -3,7 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { IProduct } from '../../../api/productApi';
 import { STATIC_HOST, THUMBNAIL_URL } from '../../../constants';
-import formatPrice from '../../../utils/common';
+import { formatPrice } from '../../../utils';
 
 interface P {
     product: IProduct;

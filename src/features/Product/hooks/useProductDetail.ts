@@ -3,7 +3,7 @@ import productApi from '../../../api/productApi';
 
 const useProductDetail = ({ productId }: any) => {
     const [loading, setLoading] = React.useState(true);
-    const [product, setProduct] = React.useState({});
+    const [product, setProduct] = React.useState<{} | any>({});
 
     React.useEffect(() => {
         (async () => {

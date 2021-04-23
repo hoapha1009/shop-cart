@@ -14,7 +14,7 @@ import { Controller } from 'react-hook-form';
 type P = {
     name: string;
     form: any;
-    label: string;
+    label?: string;
     disabled?: boolean;
 };
 
@@ -67,7 +67,14 @@ const QuantityField: React.FC<P> = (props) => {
                                 type='number'
                                 disabled={disabled}
                                 value={field.value}
-                                onChange={field.onChange}
+                                onChange={() =>
+                                    setValue(
+                                        name,
+                                        Number.parseInt(field.value)
+                                            ? Number.parseInt(field.value)
+                                            : 1
+                                    )
+                                }
                                 onBlur={field.onBlur}
                             />
                             <IconButton

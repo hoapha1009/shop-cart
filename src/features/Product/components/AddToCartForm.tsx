@@ -39,7 +39,6 @@ const AddToCartForm = (props: Props) => {
             <QuantityField name='quantity' label='Số lượng:' form={form} />
 
             <Button
-                // disabled={isSubmitting}
                 type='submit'
                 variant='contained'
                 color='primary'

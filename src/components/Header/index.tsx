@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Badge, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,15 +6,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { AccountCircle } from '@material-ui/icons';
+import { AccountCircle, ShoppingCart } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
 import StorefrontIcon from '@material-ui/icons/Storefront';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import Login from '../../features/Auth/Login';
 import Register from '../../features/Auth/Register';
 import { signOut } from '../../features/Auth/userSlice';
+import { cartItemsCountSelector } from '../../features/Cart/cartSelectors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,6 +64,8 @@ const Header = () => {
     const loggedInUser = useAppSelector((state) => state.user.current);
     const isLoggedIn = !!loggedInUser.id;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const cartItemsCount = useAppSelector(cartItemsCountSelector);
+    const history = useHistory();
 
     const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -84,6 +87,11 @@ const Header = () => {
         const action = signOut();
         dispatch(action);
     };
+
+    const handleCartClick = () => {
+        history.push('/cart');
+    };
+
     return (
         <div className={classes.root}>
             <AppBar position='static'>
@@ -110,6 +118,15 @@ const Header = () => {
                             <AccountCircle />
                         </IconButton>
                     )}
+                    <IconButton
+                        aria-label='show 4 new mails'
+                        color='inherit'
+                        onClick={handleCartClick}
+                    >
+                        <Badge badgeContent={cartItemsCount} color='secondary'>
+                            <ShoppingCart />
+                        </Badge>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
