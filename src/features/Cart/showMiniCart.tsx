@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
+import { useHistory } from 'react-router';
 
 interface Props {
     onClose?: () => void;
@@ -63,10 +64,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const ShowMiniCart = (props: Props) => {
     const classes = useStyles();
     const { onClose } = props;
+    const history = useHistory();
 
     const handleClose = () => {
         if (!onClose) return;
         onClose();
+    };
+
+    const moveToCartPage = () => {
+        history.push('/cart');
     };
 
     return (
@@ -76,7 +82,12 @@ const ShowMiniCart = (props: Props) => {
                     Thêm vào giỏ hàng thành công!
                 </Box>
                 <Box className={classes.action}>
-                    <Button color='secondary' size='small' variant='contained'>
+                    <Button
+                        color='secondary'
+                        size='small'
+                        variant='contained'
+                        onClick={moveToCartPage}
+                    >
                         Xem giỏ hàng và thanh toán
                     </Button>
                 </Box>

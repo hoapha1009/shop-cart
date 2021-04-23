@@ -10,12 +10,14 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
 import React from 'react';
 import { Controller } from 'react-hook-form';
+import { IInputAddToCartForm } from '../../../features/Product/components/AddToCartForm';
 
 type P = {
     name: string;
     form: any;
     label?: string;
     disabled?: boolean;
+    onChangeQuantity?: (values: IInputAddToCartForm) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -30,10 +32,15 @@ const useStyles = makeStyles((theme) => ({
 
 const QuantityField: React.FC<P> = (props) => {
     const classes = useStyles();
-    const { name, form, label, disabled } = props;
+    const { name, form, label, disabled, onChangeQuantity } = props;
     const { errors } = form.formState;
     const { setValue } = form;
     const hasError = !!errors[name];
+
+    const handleChangeQuantity = (values: IInputAddToCartForm) => {
+        if (!onChangeQuantity) return;
+        onChangeQuantity(values);
+    };
 
     return (
         <FormControl
@@ -51,14 +58,15 @@ const QuantityField: React.FC<P> = (props) => {
                     return (
                         <Box className={classes.box}>
                             <IconButton
-                                onClick={() =>
+                                onClick={() => {
                                     setValue(
                                         name,
                                         Number.parseInt(field.value)
                                             ? Number.parseInt(field.value) - 1
                                             : 1
-                                    )
-                                }
+                                    );
+                                    handleChangeQuantity(field.value);
+                                }}
                             >
                                 <RemoveCircleOutline />
                             </IconButton>
@@ -67,25 +75,27 @@ const QuantityField: React.FC<P> = (props) => {
                                 type='number'
                                 disabled={disabled}
                                 value={field.value}
-                                onChange={() =>
+                                onChange={() => {
                                     setValue(
                                         name,
                                         Number.parseInt(field.value)
                                             ? Number.parseInt(field.value)
                                             : 1
-                                    )
-                                }
+                                    );
+                                    handleChangeQuantity(field.value);
+                                }}
                                 onBlur={field.onBlur}
                             />
                             <IconButton
-                                onClick={() =>
+                                onClick={() => {
                                     setValue(
                                         name,
                                         Number.parseInt(field.value)
                                             ? Number.parseInt(field.value) + 1
                                             : 1
-                                    )
-                                }
+                                    );
+                                    handleChangeQuantity(field.value);
+                                }}
                             >
                                 <AddCircleOutline />
                             </IconButton>

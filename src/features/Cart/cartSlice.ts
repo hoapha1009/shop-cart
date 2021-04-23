@@ -11,7 +11,7 @@ const initialState: ICartState = {
 };
 
 const userSlice = createSlice({
-    name: 'counter',
+    name: 'cart',
     initialState,
     reducers: {
         showMiniCartClick(state) {
@@ -39,6 +39,11 @@ const userSlice = createSlice({
             const { id, quantity } = action.payload;
             const index = state.cartItems.findIndex((x: any) => x.id === id);
             if (index >= 0) {
+                // if (state.cartItems[index].quantity === 1) {
+                //     state.cartItems.filter(
+                //         (cartItem: any) => cartItem.id !== id
+                //     );
+                // }
                 state.cartItems[index].quantity = quantity;
             }
         },
