@@ -14,10 +14,10 @@ const userSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
-        showMiniCart(state) {
+        showMiniCartClick(state) {
             state.showMiniCart = true;
         },
-        hideMiniCart(state) {
+        hideMiniCartClick(state) {
             state.showMiniCart = false;
         },
         addToCart(state, action) {
@@ -53,8 +53,8 @@ const userSlice = createSlice({
 
 const { actions, reducer } = userSlice;
 export const {
-    showMiniCart,
-    hideMiniCart,
+    showMiniCartClick,
+    hideMiniCartClick,
     addToCart,
     setQuantity,
     removeFromCart,

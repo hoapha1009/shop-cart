@@ -16,6 +16,8 @@ import Login from '../../features/Auth/Login';
 import Register from '../../features/Auth/Register';
 import { signOut } from '../../features/Auth/userSlice';
 import { cartItemsCountSelector } from '../../features/Cart/cartSelectors';
+import { hideMiniCartClick } from '../../features/Cart/cartSlice';
+import ShowMiniCart from '../../features/Cart/showMiniCart';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,6 +51,11 @@ const useStyles = makeStyles((theme) => ({
     box: {
         paddingBottom: theme.spacing(2),
     },
+    miniCart: {
+        position: 'absolute',
+        top: theme.spacing(6.5),
+        right: theme.spacing(4.2),
+    },
 }));
 
 const MODE = {
@@ -66,6 +73,7 @@ const Header = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const cartItemsCount = useAppSelector(cartItemsCountSelector);
     const history = useHistory();
+    const showMiniCart = useAppSelector((state) => state.cart.showMiniCart);
 
     const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -90,6 +98,10 @@ const Header = () => {
 
     const handleCartClick = () => {
         history.push('/cart');
+    };
+
+    const handleCartClose = () => {
+        dispatch(hideMiniCartClick());
     };
 
     return (
@@ -127,6 +139,11 @@ const Header = () => {
                             <ShoppingCart />
                         </Badge>
                     </IconButton>
+                    <Box className={classes.miniCart}>
+                        {showMiniCart && (
+                            <ShowMiniCart onClose={handleCartClose} />
+                        )}
+                    </Box>
                 </Toolbar>
             </AppBar>
 

@@ -3,7 +3,7 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import { Route, Switch, useRouteMatch } from 'react-router';
 import { useAppDispatch } from '../../../app/hooks';
-import { addToCart } from '../../Cart/cartSlice';
+import { addToCart, showMiniCartClick } from '../../Cart/cartSlice';
 import AddToCartForm, {
     IInputAddToCartForm,
 } from '../components/AddToCartForm';
@@ -62,6 +62,7 @@ const DetailPage = () => {
             quantity: values.quantity,
         });
         dispatch(action);
+        dispatch(showMiniCartClick());
     };
 
     return (
