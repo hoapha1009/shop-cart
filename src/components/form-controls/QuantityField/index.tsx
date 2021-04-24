@@ -17,7 +17,7 @@ type P = {
     form: any;
     label?: string;
     disabled?: boolean;
-    onChangeQuantity?: (values: IInputAddToCartForm) => void;
+    onSubmit?: (values: IInputAddToCartForm) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -32,14 +32,14 @@ const useStyles = makeStyles((theme) => ({
 
 const QuantityField: React.FC<P> = (props) => {
     const classes = useStyles();
-    const { name, form, label, disabled, onChangeQuantity } = props;
+    const { name, form, label, disabled, onSubmit } = props;
     const { errors } = form.formState;
     const { setValue } = form;
     const hasError = !!errors[name];
 
-    const handleChangeQuantity = (values: IInputAddToCartForm) => {
-        if (!onChangeQuantity) return;
-        onChangeQuantity(values);
+    const handleQuantitySubmit = (values: IInputAddToCartForm) => {
+        if (!onSubmit) return;
+        onSubmit(values);
     };
 
     return (
@@ -65,7 +65,7 @@ const QuantityField: React.FC<P> = (props) => {
                                             ? Number.parseInt(field.value) - 1
                                             : 1
                                     );
-                                    handleChangeQuantity(field.value);
+                                    handleQuantitySubmit(field.value);
                                 }}
                             >
                                 <RemoveCircleOutline />
@@ -75,14 +75,9 @@ const QuantityField: React.FC<P> = (props) => {
                                 type='number'
                                 disabled={disabled}
                                 value={field.value}
-                                onChange={() => {
-                                    setValue(
-                                        name,
-                                        Number.parseInt(field.value)
-                                            ? Number.parseInt(field.value)
-                                            : 1
-                                    );
-                                    handleChangeQuantity(field.value);
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    handleQuantitySubmit(field.value);
                                 }}
                                 onBlur={field.onBlur}
                             />
@@ -94,7 +89,7 @@ const QuantityField: React.FC<P> = (props) => {
                                             ? Number.parseInt(field.value) + 1
                                             : 1
                                     );
-                                    handleChangeQuantity(field.value);
+                                    handleQuantitySubmit(field.value);
                                 }}
                             >
                                 <AddCircleOutline />

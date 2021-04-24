@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import { useAppDispatch } from '../../app/hooks';
 import QuantityField from '../../components/form-controls/QuantityField';
 import { formatPrice } from '../../utils';
-import { IInputAddToCartForm } from '../Product/components/AddToCartForm';
 import ProductThumbnail from '../Product/components/ProductThumbnail';
 import { removeFromCart, setQuantity } from './cartSlice';
+import { IInputAddToCartForm } from '../Product/components/AddToCartForm';
 
 interface Props {
     product: any | {};
@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CartItem = (props: Props) => {
     const { product } = props;
+    console.log('product', product);
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const schema = yup.object().shape({
@@ -86,13 +87,16 @@ const CartItem = (props: Props) => {
             .typeError('Vui lòng nhập đúng số lượng!'),
     });
     const form = useForm<IInputAddToCartForm>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
         defaultValues: {
             quantity: product.quantity,
         },
         resolver: yupResolver(schema),
     });
 
-    const handleChangeQuantity = async (values: IInputAddToCartForm) => {
+    const handleSubmit = (values: IInputAddToCartForm) => {
+        console.log('values', values);
         const action = setQuantity({
             id: product.id,
             quantity: values,
@@ -104,6 +108,7 @@ const CartItem = (props: Props) => {
         const action = removeFromCart(id);
         dispatch(action);
     };
+
     return (
         <Paper elevation={0} className={classes.root}>
             <Grid container>
@@ -156,12 +161,12 @@ const CartItem = (props: Props) => {
                             </Box>
                         </Box>
                         <Box className={classes.qty}>
-                            <form>
+                            <form onSubmit={form.handleSubmit(handleSubmit)}>
                                 <QuantityField
                                     name='quantity'
                                     label=''
                                     form={form}
-                                    onChangeQuantity={handleChangeQuantity}
+                                    onSubmit={handleSubmit}
                                 />
                             </form>
                         </Box>
