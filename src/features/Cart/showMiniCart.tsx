@@ -8,6 +8,8 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import { useHistory } from 'react-router';
+import { useAppDispatch } from '../../app/hooks';
+import { hideMiniCartClick } from './cartSlice';
 
 interface Props {
     onClose?: () => void;
@@ -65,6 +67,7 @@ const ShowMiniCart = (props: Props) => {
     const classes = useStyles();
     const { onClose } = props;
     const history = useHistory();
+    const dispatch = useAppDispatch();
 
     const handleClose = () => {
         if (!onClose) return;
@@ -73,6 +76,7 @@ const ShowMiniCart = (props: Props) => {
 
     const moveToCartPage = () => {
         history.push('/cart');
+        dispatch(hideMiniCartClick());
     };
 
     return (

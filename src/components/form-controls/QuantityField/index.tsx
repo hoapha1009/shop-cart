@@ -34,12 +34,46 @@ const QuantityField: React.FC<P> = (props) => {
     const classes = useStyles();
     const { name, form, label, disabled, onSubmit } = props;
     const { errors } = form.formState;
-    const { setValue } = form;
+    const { setValue, getValues } = form;
+    const defaultValue = getValues(name);
+    console.log('defaultValue', defaultValue);
     const hasError = !!errors[name];
 
-    const handleQuantitySubmit = (values: IInputAddToCartForm) => {
+    const handleQuantitySubmit = (value: any) => {
         if (!onSubmit) return;
-        onSubmit(values);
+        onSubmit(value);
+    };
+
+    const handleQuantityChange = (
+        e:
+            | React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            | React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        value: any,
+        type?: string
+    ) => {
+        e.preventDefault();
+        let newValue;
+
+        switch (type) {
+            case 'desc': {
+                newValue = Number.parseInt(value)
+                    ? Number.parseInt(value) - 1
+                    : 1;
+                break;
+            }
+            case 'asc': {
+                newValue = Number.parseInt(value)
+                    ? Number.parseInt(value) + 1
+                    : 1;
+                break;
+            }
+            default:
+                newValue = Number.parseInt(getValues(name))
+                    ? Number.parseInt(getValues(name))
+                    : Number.parseInt(value);
+        }
+
+        return newValue;
     };
 
     return (
@@ -58,14 +92,14 @@ const QuantityField: React.FC<P> = (props) => {
                     return (
                         <Box className={classes.box}>
                             <IconButton
-                                onClick={() => {
-                                    setValue(
-                                        name,
-                                        Number.parseInt(field.value)
-                                            ? Number.parseInt(field.value) - 1
-                                            : 1
+                                onClick={(e) => {
+                                    const value = handleQuantityChange(
+                                        e,
+                                        field.value,
+                                        'desc'
                                     );
-                                    handleQuantitySubmit(field.value);
+                                    setValue(name, value);
+                                    handleQuantitySubmit(value);
                                 }}
                             >
                                 <RemoveCircleOutline />
@@ -77,19 +111,24 @@ const QuantityField: React.FC<P> = (props) => {
                                 value={field.value}
                                 onChange={(e) => {
                                     field.onChange(e);
-                                    handleQuantitySubmit(field.value);
+                                    const value = handleQuantityChange(
+                                        e,
+                                        field.value
+                                    );
+                                    setValue(name, value);
+                                    handleQuantitySubmit(value);
                                 }}
                                 onBlur={field.onBlur}
                             />
                             <IconButton
-                                onClick={() => {
-                                    setValue(
-                                        name,
-                                        Number.parseInt(field.value)
-                                            ? Number.parseInt(field.value) + 1
-                                            : 1
+                                onClick={(e) => {
+                                    const value = handleQuantityChange(
+                                        e,
+                                        field.value,
+                                        'asc'
                                     );
-                                    handleQuantitySubmit(field.value);
+                                    setValue(name, value);
+                                    handleQuantitySubmit(value);
                                 }}
                             >
                                 <AddCircleOutline />
