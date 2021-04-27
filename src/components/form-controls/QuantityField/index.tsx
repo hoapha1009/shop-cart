@@ -1,13 +1,16 @@
 import {
     Box,
+    FormControl,
     FormHelperText,
     IconButton,
     makeStyles,
+    OutlinedInput,
+    Snackbar,
     Typography,
 } from '@material-ui/core';
-import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import { Theme } from '@material-ui/core/styles';
 import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { IInputAddToCartForm } from '../../../features/Product/components/AddToCartForm';
@@ -20,7 +23,11 @@ type P = {
     onSubmit?: (values: IInputAddToCartForm) => void;
 };
 
-const useStyles = makeStyles((theme) => ({
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
     root: {},
     box: {
         display: 'flex',
@@ -35,24 +42,17 @@ const QuantityField: React.FC<P> = (props) => {
     const { name, form, label, disabled, onSubmit } = props;
     const { errors } = form.formState;
     const { setValue, getValues } = form;
-    const defaultValue = getValues(name);
-    console.log('defaultValue', defaultValue);
     const hasError = !!errors[name];
+    const [open, setOpen] = React.useState(false);
 
     const handleQuantitySubmit = (value: any) => {
         if (!onSubmit) return;
         onSubmit(value);
     };
 
-    const handleQuantityChange = (
-        e:
-            | React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-            | React.MouseEvent<HTMLButtonElement, MouseEvent>,
-        value: any,
-        type?: string
-    ) => {
-        e.preventDefault();
-        let newValue;
+    const handleQuantityChange = (value: any, type?: string) => {
+        let newValue = value;
+        const maxValue = 99;
 
         switch (type) {
             case 'desc': {
@@ -72,8 +72,16 @@ const QuantityField: React.FC<P> = (props) => {
                     ? Number.parseInt(getValues(name))
                     : Number.parseInt(value);
         }
+        if (newValue > maxValue) {
+            setOpen(true);
+            return maxValue;
+        }
 
         return newValue;
+    };
+
+    const handleClose = (event?: React.SyntheticEvent) => {
+        setOpen(false);
     };
 
     return (
@@ -92,9 +100,8 @@ const QuantityField: React.FC<P> = (props) => {
                     return (
                         <Box className={classes.box}>
                             <IconButton
-                                onClick={(e) => {
+                                onClick={() => {
                                     const value = handleQuantityChange(
-                                        e,
                                         field.value,
                                         'desc'
                                     );
@@ -121,9 +128,8 @@ const QuantityField: React.FC<P> = (props) => {
                                 onBlur={field.onBlur}
                             />
                             <IconButton
-                                onClick={(e) => {
+                                onClick={() => {
                                     const value = handleQuantityChange(
-                                        e,
                                         field.value,
                                         'asc'
                                     );
@@ -141,6 +147,11 @@ const QuantityField: React.FC<P> = (props) => {
             <FormHelperText error={hasError}>
                 {errors[name]?.message}
             </FormHelperText>
+            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity='info'>
+                    Số lượng tối đa có thể mua của sản phẩm này là 99!
+                </Alert>
+            </Snackbar>
         </FormControl>
     );
 };

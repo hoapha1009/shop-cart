@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import { useAppDispatch } from '../../app/hooks';
 import QuantityField from '../../components/form-controls/QuantityField';
 import { formatPrice } from '../../utils';
+import { IInputAddToCartForm } from '../Product/components/AddToCartForm';
 import ProductThumbnail from '../Product/components/ProductThumbnail';
 import { removeFromCart, setQuantity } from './cartSlice';
-import { IInputAddToCartForm } from '../Product/components/AddToCartForm';
 
 interface Props {
     product: any | {};
@@ -76,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CartItem = (props: Props) => {
     const { product } = props;
-    console.log('product', product);
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const schema = yup.object().shape({
@@ -96,7 +95,6 @@ const CartItem = (props: Props) => {
     });
 
     const handleSubmit = (values: IInputAddToCartForm) => {
-        console.log('values', values);
         const action = setQuantity({
             id: product.id,
             quantity: values,

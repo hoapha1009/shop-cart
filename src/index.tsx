@@ -1,28 +1,26 @@
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store, { persistor } from './app/store';
-import { SnackbarProvider } from 'notistack';
+import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
+import App from './App';
+import store, { persistor } from './app/store';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <SnackbarProvider
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-                <BrowserRouter>
-                    <PersistGate persistor={persistor} loading={null}>
-                        <App />
-                    </PersistGate>
-                </BrowserRouter>
-            </SnackbarProvider>
-        </Provider>
-    </React.StrictMode>,
+    <Provider store={store}>
+        <SnackbarProvider
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+            <BrowserRouter>
+                <PersistGate persistor={persistor} loading={null}>
+                    <App />
+                </PersistGate>
+            </BrowserRouter>
+        </SnackbarProvider>
+    </Provider>,
     document.getElementById('root')
 );
 
