@@ -92,6 +92,7 @@ const Header = () => {
     };
 
     const handleSignOut = () => {
+        handleCloseMenu();
         const action = signOut();
         dispatch(action);
     };
