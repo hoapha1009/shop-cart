@@ -5,27 +5,20 @@ import {
     IconButton,
     makeStyles,
     OutlinedInput,
-    Snackbar,
     Typography,
 } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
 import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { IInputAddToCartForm } from '../../../features/Product/components/AddToCartForm';
 
 type P = {
     name: string;
     form: any;
     label?: string;
     disabled?: boolean;
-    onSubmit?: (values: IInputAddToCartForm) => void;
+    onChange?: (values: number) => void;
 };
-
-function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -39,49 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const QuantityField: React.FC<P> = (props) => {
     const classes = useStyles();
-    const { name, form, label, disabled, onSubmit } = props;
+    const { name, form, label, disabled, onChange } = props;
     const { errors } = form.formState;
-    const { setValue, getValues } = form;
     const hasError = !!errors[name];
-    const [open, setOpen] = React.useState(false);
 
-    const handleQuantitySubmit = (value: any) => {
-        if (!onSubmit) return;
-        onSubmit(value);
-    };
-
-    const handleQuantityChange = (value: any, type?: string) => {
-        let newValue = value;
-        const maxValue = 99;
-
-        switch (type) {
-            case 'desc': {
-                newValue = Number.parseInt(value)
-                    ? Number.parseInt(value) - 1
-                    : 1;
-                break;
-            }
-            case 'asc': {
-                newValue = Number.parseInt(value)
-                    ? Number.parseInt(value) + 1
-                    : 1;
-                break;
-            }
-            default:
-                newValue = Number.parseInt(getValues(name))
-                    ? Number.parseInt(getValues(name))
-                    : Number.parseInt(value);
-        }
-        if (newValue > maxValue) {
-            setOpen(true);
-            return maxValue;
-        }
-
-        return newValue;
-    };
-
-    const handleClose = (event?: React.SyntheticEvent) => {
-        setOpen(false);
+    const handleChange = (newValue: number) => {
+        form.setValue(name, newValue);
+        if (onChange) onChange(newValue);
     };
 
     return (
@@ -101,12 +58,7 @@ const QuantityField: React.FC<P> = (props) => {
                         <Box className={classes.box}>
                             <IconButton
                                 onClick={() => {
-                                    const value = handleQuantityChange(
-                                        field.value,
-                                        'desc'
-                                    );
-                                    setValue(name, value);
-                                    handleQuantitySubmit(value);
+                                    handleChange(field.value - 1);
                                 }}
                             >
                                 <RemoveCircleOutline />
@@ -117,24 +69,15 @@ const QuantityField: React.FC<P> = (props) => {
                                 disabled={disabled}
                                 value={field.value}
                                 onChange={(e) => {
-                                    field.onChange(e);
-                                    const value = handleQuantityChange(
-                                        e,
-                                        field.value
+                                    handleChange(
+                                        Number.parseInt(e.target.value)
                                     );
-                                    setValue(name, value);
-                                    handleQuantitySubmit(value);
                                 }}
                                 onBlur={field.onBlur}
                             />
                             <IconButton
                                 onClick={() => {
-                                    const value = handleQuantityChange(
-                                        field.value,
-                                        'asc'
-                                    );
-                                    setValue(name, value);
-                                    handleQuantitySubmit(value);
+                                    handleChange(field.value + 1);
                                 }}
                             >
                                 <AddCircleOutline />
@@ -147,11 +90,6 @@ const QuantityField: React.FC<P> = (props) => {
             <FormHelperText error={hasError}>
                 {errors[name]?.message}
             </FormHelperText>
-            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity='info'>
-                    Số lượng tối đa có thể mua của sản phẩm này là 99!
-                </Alert>
-            </Snackbar>
         </FormControl>
     );
 };

@@ -94,10 +94,10 @@ const CartItem = (props: Props) => {
         resolver: yupResolver(schema),
     });
 
-    const handleSubmit = (values: IInputAddToCartForm) => {
+    const handleChangeQuantity = (newValue: number) => {
         const action = setQuantity({
             id: product.id,
-            quantity: values,
+            quantity: newValue,
         });
         dispatch(action);
     };
@@ -159,12 +159,12 @@ const CartItem = (props: Props) => {
                             </Box>
                         </Box>
                         <Box className={classes.qty}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)}>
+                            <form>
                                 <QuantityField
                                     name='quantity'
                                     label=''
                                     form={form}
-                                    onSubmit={handleSubmit}
+                                    onChange={handleChangeQuantity}
                                 />
                             </form>
                         </Box>
