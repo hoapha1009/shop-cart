@@ -1,7 +1,7 @@
 # Shop Website
 
 Building shop website!
-[Link]('https://shop-mini.vercel.app/products')
+[Link web]('https://shop-mini.vercel.app/products')
 
 # Technology
 
